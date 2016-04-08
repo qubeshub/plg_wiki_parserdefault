@@ -25,90 +25,58 @@
  * HUBzero is a registered trademark of Purdue University.
  *
  * @package   hubzero-cms
- * @author    Shawn Rice <zooley@purdue.edu>
  * @copyright Copyright 2005-2015 HUBzero Foundation, LLC.
  * @license   http://opensource.org/licenses/MIT MIT
  */
 
-// No direct access
-defined('_HZEXEC_') or die();
+namespace Components\Wiki\Models;
+
+use Hubzero\Database\Relational;
 
 /**
- * Table class for wiki math conversions
+ * Model for wiki math conversions
  */
-class WikiPageMath extends JTable
+class Forumla extends Relational
 {
 	/**
-	 * int(11) Primary key
+	 * The table namespace
 	 *
-	 * @var integer
+	 * @var  string
 	 */
-	var $id               = NULL;
+	protected $namespace = 'wiki';
 
 	/**
-	 * varbinary(16)
+	 * Default order by for model
 	 *
-	 * @var string
+	 * @var  string
 	 */
-	var $inputhash        = NULL;
+	public $orderBy = 'id';
 
 	/**
-	 * varbinary(16)
+	 * Default order direction for select queries
 	 *
-	 * @var string
+	 * @var  string
 	 */
-	var $outputhash       = NULL;
+	public $orderDir = 'asc';
 
 	/**
-	 * tinyint
+	 * Fields and their validation criteria
 	 *
-	 * @var integer
+	 * @var  array
 	 */
-	var $conservativeness = NULL;
-
-	/**
-	 * text
-	 *
-	 * @var string
-	 */
-	var $html             = NULL;
-
-	/**
-	 * text
-	 *
-	 * @var string
-	 */
-	var $mathml           = NULL;
-
-	/**
-	 * Constructor
-	 *
-	 * @param      object &$db JDatabase
-	 * @return     void
-	 */
-	public function __construct(&$db)
-	{
-		parent::__construct('#__wiki_math', 'id', $db);
-	}
+	protected $rules = array(
+		'inputhash'  => 'notempty',
+		'outputhash' => 'notempty'
+	);
 
 	/**
 	 * Load a record by inputhash and bind to $this
 	 *
-	 * @param      string $inputhash Hash to load
-	 * @return     boolean True on success
+	 * @param   string  $inputhash  Hash to load
+	 * @return  object
 	 */
-	public function loadByInput($inputhash)
+	public static function oneByInputhash($inputhash)
 	{
-		$this->_db->setQuery("SELECT * FROM $this->_tbl WHERE inputhash='" . addslashes($inputhash) . "' LIMIT 1");
-		if ($result = $this->_db->loadAssoc())
-		{
-			return $this->bind($result);
-		}
-		else
-		{
-			$this->setError($this->_db->getErrorMsg());
-			return false;
-		}
+		return self::blank()->whereEquals('inputhash', $inputhash)->row();
 	}
 }
-

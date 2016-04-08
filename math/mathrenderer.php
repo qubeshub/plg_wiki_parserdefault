@@ -393,20 +393,18 @@ class MathRenderer
 			}
 
 			// Now save it back to the DB:
-			$database = App::get('db');
 			$outmd5_sql = $this->hash; //pack('H32', $this->hash);
 			$md5_sql    = $this->md5; //pack('H32', $this->md5); // Binary packed, not hex
 
-			$wm = new WikiPageMath($database);
-			$wm->loadByInput($md5_sql);
-			if (!$wm->id)
+			$wm = \Components\Wiki\Models\Forumla::oneByInputhash($md5_sql);
+			if (!$wm->get('id'))
 			{
-				$wm->inputhash        = $this->_encodeBlob($md5_sql);
-				$wm->outputhash       = $this->_encodeBlob($outmd5_sql);
-				$wm->conservativeness = $this->conservativeness;
-				$wm->html             = $this->html;
-				$wm->mathml           = $this->mathml;
-				if (!$wm->store())
+				$wm->set('inputhash', $this->_encodeBlob($md5_sql));
+				$wm->set('outputhash', $this->_encodeBlob($outmd5_sql));
+				$wm->set('conservativeness', $this->conservativeness);
+				$wm->set('html', $this->html);
+				$wm->set('mathml', $this->mathml);
+				if (!$wm->save())
 				{
 					return $wm->getError();
 				}
@@ -440,20 +438,17 @@ class MathRenderer
 	{
 		$this->md5 = md5($this->tex);
 
-		$database = App::get('db');
-		$wm = new WikiPageMath($database);
-		//$wm->loadByInput($this->_encodeBlob(pack("H32", $this->md5)));
-		$wm->loadByInput($this->_encodeBlob($this->md5));
+		$wm = \Components\Wiki\Models\Forumla::oneByInputhash($this->_encodeBlob($this->md5));
 
-		if ($wm->id)
+		if ($wm->get('id'))
 		{
 			// Tailing 0x20s can get dropped by the database, add it back on if necessary:
 			//$xhash = $wm->outputhash; //$this->_decodeBlob($wm->outputhash); //unpack('H32md5', $this->_decodeBlob($wm->outputhash) . "                ");
-			$this->hash = $wm->outputhash;
+			$this->hash = $wm->get('outputhash');
 
-			$this->conservativeness = $wm->conservativeness;
-			$this->html = $wm->html;
-			$this->mathml = $wm->mathml;
+			$this->conservativeness = $wm->get('conservativeness');
+			$this->html   = $wm->get('html');
+			$this->mathml = $wm->get('mathml');
 
 			if (file_exists($this->_getHashPath() . DS . "{$this->hash}.png"))
 			{
