@@ -36,7 +36,7 @@ defined('_HZEXEC_') or die();
 /**
  * Wiki macro class that will insert a linked title to a resource
  */
-class ResourceMacro extends WikiMacro
+class ResourcesMacro extends WikiMacro
 {
 	/**
 	 * Allow macro in partial parsing?
@@ -53,8 +53,8 @@ class ResourceMacro extends WikiMacro
 	public function description()
 	{
 		$txt = array();
-		$txt['wiki'] = 'This macro will insert a linked title to a resource. It can be passed wither an ID or alias.';
-		$txt['html'] = '<p>This macro will insert a linked title to a resource. It can be passed wither an ID or alias.</p>';
+		$txt['wiki'] = 'This macro will insert a linked title to a resource. It can be passed either an ID or alias.';
+		$txt['html'] = '<p>This macro will insert a linked title to a resource. It can be passed either an ID or alias.</p>';
 		return $txt['html'];
 	}
 
@@ -85,7 +85,7 @@ class ResourceMacro extends WikiMacro
 		{
 			$a = trim($a);
 
-			if (substr($a,0,11) == 'screenshots')
+			if (substr($a, 0, 11) == 'screenshots')
 			{
 				$bits = explode('=', $a);
 				$num = intval(end($bits));
@@ -175,7 +175,7 @@ class ResourceMacro extends WikiMacro
 			while (false !== ($entry = $d->read()))
 			{
 				$img_file = $entry;
-				if (is_file(PATH_APP . $path . DS . $alias . DS . $img_file) && substr($entry,0,1) != '.' && strtolower($entry) !== 'index.html')
+				if (is_file(PATH_APP . $path . DS . $alias . DS . $img_file) && substr($entry, 0, 1) != '.' && strtolower($entry) !== 'index.html')
 				{
 					if (preg_match("#bmp|gif|jpg|png|swf#i", $img_file))
 					{
