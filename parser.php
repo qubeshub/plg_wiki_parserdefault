@@ -602,7 +602,7 @@ class WikiParser
 				$whole,
 				'anchor',
 				$this->_randomString(),
-				'<a name="' . ltrim($href, '=#') . '"></a>'
+				'<span id="' . ltrim($href, '=#') . '"></span>'
 			));
 		}
 		// Are we jumping to an anchor?
@@ -3098,7 +3098,7 @@ class WikiParser
 	 */
 	private function _makeHeadline($level, $attribs, $anchor, $text, $link)
 	{
-		return '<h' . $level . $attribs . '<a name="' . $anchor . '"></a><span class="tp-headline">' . $text . '</span> ' . $link . '</h' . $level . '>';
+		return '<h' . $level . $attribs . '<span id="' . $anchor . '" class="tp-headline">' . $text . '</span> ' . $link . '</h' . $level . '>';
 	}
 
 	/**
