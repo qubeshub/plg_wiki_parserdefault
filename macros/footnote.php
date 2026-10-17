@@ -60,8 +60,10 @@ Examples:
 		if ($this->args)
 		{
 			$p = new WikiParser('Footnotes', $this->option, $this->scope, $this->pagename, $this->pageid, $this->filepath, $this->domain);
-//echo $note . '<br /><br />';
 			
+			// Args are either "note" or "label | note". The label (stub) lets a
+			// later [[Footnote(label)]] reference the same footnote. When no label
+			// is given the note text itself acts as the stub.
 			$args = explode('|', $this->args);
 			$stub = trim(array_shift($args));
 			$note = (isset($args[0]) ? trim($args[0]) : $stub);
@@ -89,8 +91,8 @@ Examples:
 				'fndef-' . $i
 			);
 
-			$wm->footnotes_stubs[] = $stub;
 			$wm->footnotes_notes[] = $note;
+			$wm->footnotes_stubs[] = $stub;
 			$wm->footnotes[] = $footnote;
 
 			return '<sup id="fndef-' . $i . '" class="tex2jax_ignore"><a href="#fnref-' . $i . '" aria-label="Footnote ' . $i . '">&#91;' . $i . '&#93;</a></sup>';
