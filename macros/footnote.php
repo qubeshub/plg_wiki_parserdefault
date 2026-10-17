@@ -75,7 +75,7 @@ Examples:
 
 				$wm->footnotes[$i-1]->refs[] = 'fndef-' . $k;
 
-				return '<sup id="fndef-' . $k . '" class="tex2jax_ignore"><a href="#fnref-' . $i . '">&#91;' . $i . '&#93;</a></sup>';
+				return '<sup id="fndef-' . $k . '" class="tex2jax_ignore"><a href="#fnref-' . $i . '" aria-label="Footnote ' . $i . '">&#91;' . $i . '&#93;</a></sup>';
 			}
 
 			$note = $p->parse($note);
@@ -93,7 +93,7 @@ Examples:
 			$wm->footnotes_notes[] = $note;
 			$wm->footnotes[] = $footnote;
 
-			return '<sup id="fndef-' . $i . '" class="tex2jax_ignore"><a href="#fnref-' . $i . '">&#91;' . $i . '&#93;</a></sup>';
+			return '<sup id="fndef-' . $i . '" class="tex2jax_ignore"><a href="#fnref-' . $i . '" aria-label="Footnote ' . $i . '">&#91;' . $i . '&#93;</a></sup>';
 		}
 		else
 		{
