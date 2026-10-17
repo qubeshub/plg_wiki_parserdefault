@@ -3009,10 +3009,14 @@ class WikiParser
 		$forceTocPosition    = true;
 		//$mShowToc            = true;
 
+		// Anchor for the "(Top)" link. Super groups render their own header, so
+		// point at that; regular groups sit under the sub-content header.
 		$toc_title_anchor = 'content-header';
-		if ($this->get('domain') == 'group') {
+		if ($this->get('domain') == 'group')
+		{
 			$group = \Hubzero\User\Group::getInstance($this->get('domain_id'));
-			if (!$group->isSuperGroup()) {
+			if ($group && !$group->isSuperGroup())
+			{
 				$toc_title_anchor = 'sub-content-header';
 			}
 		}
@@ -3071,10 +3075,13 @@ class WikiParser
 					if ($toclevel < $maxTocLevel)
 					{
 						$prevtoclevel = $toclevel;
-						if ($toc == '') {
+						if ($toc == '')
+						{
 							$toc .= $this->_tocIndent($toclevel);
 							$toc .= $this->_tocLine($toc_title_anchor, '(Top)', '', 1);
-						} else {
+						}
+						else
+						{
 							$toc .= $this->_tocIndent($toclevel);
 						}
 						$numVisible++;
@@ -3241,15 +3248,20 @@ class WikiParser
 			$i++;
 		}
 
-		if ($toc == '') {
+		// Ensure at least a "(Top)" entry when there were no sub-headings
+		if ($toc == '')
+		{
 			$toc .= $this->_tocIndent($toclevel);
 			$toc .= $this->_tocLine($toc_title_anchor, '(Top)', '', 1);
 		}
+
 		$output  = '<div class="article-toc' . (!$standalone ? ' macro-toc' : '') . '">' . "\n";
 		$output .= '<h3 class="article-toc-heading">Contents</h3>' . "\n";
 		$output .= $toc . "\n";
 		$output .= '</div>' . "\n";
 
+		// Standalone: return just the TOC (for placement in a sidebar/aside);
+		// otherwise substitute it in place of the [[TableOfContents]] macro.
 		return ($standalone ? $output : str_replace('<p>MACRO' . $this->token() . '[[TableOfContents]]' . "\n" . '</p>', $output, $full));
 	}
 
@@ -3275,7 +3287,7 @@ class WikiParser
 	 */
 	private function _tocIndent($toclevel)
 	{
-		return "\n<ul class='toc-list'" . ($toclevel > 1 ? " style='display: none;'": "") . ">";
+		return "\n<ul class='toc-list'" . ($toclevel > 1 ? " style='display: none;'" : "") . ">";
 	}
 
 	/**
