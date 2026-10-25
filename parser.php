@@ -640,7 +640,7 @@ class WikiParser
 				$whole,
 				'anchor',
 				$this->_randomString(),
-				'<span id="' . ltrim($href, '=#') . '"></span>'
+				'<span id="' . htmlspecialchars((string) ltrim($href, '=#'), ENT_QUOTES, 'UTF-8') . '"></span>'
 			));
 		}
 		// Are we jumping to an anchor?
